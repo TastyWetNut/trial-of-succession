@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trial of Succession</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a1a, #2d1810);
+            color: #d4af37;
+            font-family: 'Times New Roman', serif;
+            text-align: center;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .crown {
+            font-size: 4em;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(212, 175, 55, 0.5);
+        }
+        
+        .title {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            font-style: italic;
+            color: #b8860b;
+        }
+        
+        .chess-board {
+            display: inline-block;
+            border: 4px solid #d4af37;
+            background: #8b4513;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .board-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(8, 60px);
+            gap: 2px;
+        }
+        
+        .square {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            cursor: pointer;
+            border: 1px solid #654321;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        
+        .light {
+            background: #f0d9b5;
+            color: #8b4513;
+        }
+        
+        .dark {
+            background: #b58863;
+            color: #2f1b14;
+        }
+        
+        .square:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+        }
+        
+        .selected {
+            background: #d4af37 !important;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        
+        .challenge {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .puzzle-info {
+            text-align: left;
+            margin: 20px 0;
+            font-family: 'Georgia', serif;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #d4af37;
+        }
+        
+        .check-solution {
+            background: #8b4513;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .check-solution:hover {
+            background: #d4af37;
+            color: #8b4513;
+            transform: scale(1.05);
+        }
+        
+        .reward-section {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(45deg, #d4af37, #b8860b);
+            color: #1a1a1a;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+        }
+        
+        .reset-btn {
+            background: #8b4513;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        
+        .coordinates {
+            font-size: 0.8em;
+            color: #d4af37;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="crown">👑</div>
+    <h1 class="title">Trial of Succession</h1>
+    <p class="subtitle">"Only the worthy may claim the throne"</p>
+    
+    <div class="challenge">
+        <h2>The King's Ultimate Challenge</h2>
+        <p>Master the <strong>Royal Endgame</strong></p>
+        <p>White to play and deliver checkmate in one move!</p>
+        
+        <div class="puzzle-info">
+            <strong>Puzzle: The Decisive Strike</strong><br>
+            <em>The position is set. One precise move will end the game.</em><br><br>
+            <strong>Objective:</strong> Find checkmate in exactly 1 move<br>
+            <strong>Challenge:</strong> Analyze the position carefully. The winning move may come from an unexpected piece.
+        </div>
+        
+        <div class="coordinates">
+            <strong>Position Analysis:</strong><br>
+            Multiple pieces are in play. Study their interactions carefully.
+        </div>
+    </div>
+    
+    <div class="chess-board">
+        <div class="board-grid" id="chessBoard">
+            <!-- Board will be generated by JavaScript -->
+        </div>
+    </div>
+    
+    <button class="check-solution" onclick="checkSolution()">Submit Solution</button>
+    <button class="reset-btn" onclick="resetBoard()">Reset Position</button>
+    
+    <div class="reward-section" id="rewardSection">
+        <h2>🎉 MAGNIFICENT VICTORY, YOUR MAJESTY! 🎉</h2>
+        <p style="font-size: 1.5em; margin: 20px 0;">You have found the decisive blow!</p>
+        
+        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3>🏆 The Tactical Master</h3>
+            <p style="font-style: italic; margin: 15px 0;">"The beauty of a move lies not in its appearance but in the thought behind it." - Aron Nimzowitsch</p>
+        </div>
+        
+        <!-- CUSTOMIZE YOUR REWARD HERE -->
+        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3>Your Royal Reward:</h3>
+            <p style="font-size: 1.2em;">🔗 Next Clue: <a href="https://pastebin.com/YOUR_LINK_HERE" style="color: #fff; text-decoration: underline;">The Crown's Secret Archive</a></p>
+            <p>Password for next stage: <strong>CHECKMATE</strong></p>
+            <p style="font-style: italic;">The kingwatcher is pleased... proceed to your next challenge.</p>
+        </div>
+        
+        <!-- QR Code Section -->
+        <div style="margin: 20px 0;">
+            <p>Scan for your next royal decree:</p>
+            <div style="background: white; padding: 10px; display: inline-block; border-radius: 10px;">
+                <div style="width: 150px; height: 150px; background: #000; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                    QR CODE<br>PLACEHOLDER<br>(Generate at qr-code-generator.com)
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Chess puzzle position from FEN: 1Bb3BN/R2Pk2r/1Q5B/4q2R/2bN4/4Q1BK/1p6/1bq1R1rb
+        const puzzleBoard = {
+            // Rank 8
+            'b8': '♗', // White Bishop
+            'c8': '♝', // Black Bishop
+            'g8': '♗', // White Bishop
+            'h8': '♘', // White Knight
+            
+            // Rank 7
+            'a7': '♖', // White Rook
+            'd7': '♙', // White Pawn
+            'e7': '♚', // Black King
+            'h7': '♜', // Black Rook
+            
+            // Rank 6
+            'b6': '♕', // White Queen
+            'h6': '♗', // White Bishop
+            
+            // Rank 5
+            'e5': '♛', // Black Queen
+            'h5': '♖', // White Rook
+            
+            // Rank 4
+            'c4': '♝', // Black Bishop
+            'd4': '♘', // White Knight
+            
+            // Rank 3
+            'e3': '♕', // White Queen (second queen)
+            'g3': '♗', // White Bishop
+            'h3': '♔', // White King
+            
+            // Rank 2
+            'b2': '♟', // Black Pawn
+            
+            // Rank 1
+            'b1': '♝', // Black Bishop
+            'c1': '♛', // Black Queen
+            'e1': '♖', // White Rook
+            'g1': '♜', // Black Rook
+            'h1': '♝'  // Black Bishop
+        };
+        
+        let currentBoard = {};
+        let selectedSquare = null;
+        let playerMoves = [];
+        
+        // Solution: Queen from e3 to a3
+        const correctSolution = ['e3', 'a3'];
+        
+        function createBoard() {
+            const board = document.getElementById('chessBoard');
+            board.innerHTML = '';
+            const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+            
+            for (let rank = 8; rank >= 1; rank--) {
+                for (let file = 0; file < 8; file++) {
+                    const square = document.createElement('div');
+                    const squareName = files[file] + rank;
+                    const isLight = (rank + file) % 2 === 0;
+                    
+                    square.className = `square ${isLight ? 'light' : 'dark'}`;
+                    square.id = squareName;
+                    square.innerHTML = currentBoard[squareName] || '';
+                    square.onclick = () => selectSquare(squareName);
+                    
+                    board.appendChild(square);
+                }
+            }
+        }
+        
+        function selectSquare(squareName) {
+            const square = document.getElementById(squareName);
+            
+            if (selectedSquare === squareName) {
+                // Deselect
+                square.classList.remove('selected');
+                selectedSquare = null;
+            } else if (selectedSquare === null) {
+                // Select first square (only if it has a white piece)
+                const piece = currentBoard[squareName];
+                if (piece && (piece === '♔' || piece === '♕' || piece === '♖' || piece === '♗' || piece === '♘' || piece === '♙')) {
+                    square.classList.add('selected');
+                    selectedSquare = squareName;
+                }
+            } else {
+                // Make move
+                const fromSquare = document.getElementById(selectedSquare);
+                fromSquare.classList.remove('selected');
+                
+                // Record move
+                playerMoves.push([selectedSquare, squareName]);
+                
+                // Make the move
+                currentBoard[squareName] = currentBoard[selectedSquare];
+                delete currentBoard[selectedSquare];
+                selectedSquare = null;
+                
+                createBoard();
+            }
+        }
+        
+        function checkSolution() {
+            if (playerMoves.length === 0) {
+                alert('Make your move first, Your Majesty! Select a piece and then click where it should go.');
+                return;
+            }
+            
+            const lastMove = playerMoves[playerMoves.length - 1];
+            
+            // Check if the move matches the solution
+            if (lastMove[0] === correctSolution[0] && lastMove[1] === correctSolution[1]) {
+                document.getElementById('rewardSection').style.display = 'block';
+                document.querySelector('.check-solution').textContent = 'CHECKMATE ACHIEVED!';
+                document.querySelector('.check-solution').style.background = '#d4af37';
+                document.querySelector('.check-solution').style.color = '#8b4513';
+                document.querySelector('.check-solution').style.cursor = 'default';
+            } else {
+                alert('Not the winning move, Your Majesty. Study the position carefully and try again!');
+            }
+        }
+        
+        function resetBoard() {
+            currentBoard = {...puzzleBoard};
+            selectedSquare = null;
+            playerMoves = [];
+            document.getElementById('rewardSection').style.display = 'none';
+            document.querySelector('.check-solution').textContent = 'Submit Solution';
+            document.querySelector('.check-solution').style.background = '#8b4513';
+            document.querySelector('.check-solution').style.color = '#d4af37';
+            document.querySelector('.check-solution').style.cursor = 'pointer';
+            
+            // Clear any selected squares
+            document.querySelectorAll('.selected').forEach(sq => sq.classList.remove('selected'));
+            
+            createBoard();
+        }
+        
+        // Initialize the puzzle
+        function initializePuzzle() {
+            currentBoard = {...puzzleBoard};
+            createBoard();
+        }
+        
+        // Start the puzzle when page loads
+        initializePuzzle();
+    </script>
+</body>
+</html>
